@@ -10,5 +10,5 @@ file(GLOB LC "Leetcode/*.cpp")
 foreach(file ${CPPS})
     get_filename_component(name ${file} NAME_WE)
     add_executable(${name} ${file}
-            Cpp/DS_6.cpp)
+            Cpp/DS_5.cpp)
 endforeach()
