@@ -40,7 +40,7 @@ int main() {
             SoldRes(102, 12, 24.56),
             SoldRes(103, 100, 21.5)
             };
-    for (int i : sellers.size())
+    for (int i = 0; i < sellers.size(); i++)
         print(sellers[i]);
     cout << "总销售额：" << SoldRes::totalVal << endl;
     cout << "销售平均价格：" << SoldRes::totalVal / SoldRes::totalQty << endl;
