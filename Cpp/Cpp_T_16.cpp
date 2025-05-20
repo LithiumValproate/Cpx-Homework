@@ -23,8 +23,6 @@ public:
     int get_quantity() const { return quantity; }
 
     double get_price() const { return price; }
-
-    double get_value() const { return price * quantity; }
 };
 
 void print(const SoldRes& s) {
