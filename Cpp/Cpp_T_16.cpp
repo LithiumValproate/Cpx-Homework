@@ -36,11 +36,11 @@ double SoldRes::totalVal = 0;
 int main() {
     cout << "销售情况如下：" << endl;
     array<SoldRes, 3> sellers = {
-        SoldRes(101, 5, 23.5),
-        SoldRes(102, 12, 24.56),
-        SoldRes(103, 100, 21.5)
-    };
-    for (int i = 0; i < sellers.size(); i++)
+            SoldRes(101, 5, 23.5),
+            SoldRes(102, 12, 24.56),
+            SoldRes(103, 100, 21.5)
+            };
+    for (int i : sellers.size())
         print(sellers[i]);
     cout << "总销售额：" << SoldRes::totalVal << endl;
     cout << "销售平均价格：" << SoldRes::totalVal / SoldRes::totalQty << endl;
