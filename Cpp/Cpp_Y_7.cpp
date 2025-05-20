@@ -60,7 +60,7 @@ public:
         }
     }
 
-    T& get_element(int position) override {
+    T& get_element(const int position) override {
         ASSERT_VALID(is_valid(position, size));
         Node* curr = head;
         for (int i = 0; i < position; i++)
@@ -68,7 +68,7 @@ public:
         return curr->value;
     }
 
-    void insert(int position, const T& elem) override {
+    void insert(const int position, const T& elem) override {
         ASSERT_VALID(is_valid(position, size + 1));
         Node* newNode = new Node(elem);
         if (position == 0) {
