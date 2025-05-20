@@ -33,10 +33,6 @@ int SoldRes::totalQty = 0;
 
 double SoldRes::totalVal = 0;
 
-double averagePrice(double value, int qty) {
-    return value / qty;
-}
-
 int main() {
     cout << "销售情况如下：" << endl;
     array<SoldRes, 3> sellers = {
@@ -47,6 +43,6 @@ int main() {
     for (int i = 0; i < sellers.size(); i++)
         print(sellers[i]);
     cout << "总销售额：" << SoldRes::totalVal << endl;
-    cout << "销售平均价格：" << averagePrice(SoldRes::totalVal, SoldRes::totalQty) << endl;
+    cout << "销售平均价格：" << SoldRes::totalVal / SoldRes::totalQty << endl;
     return 0;
 }
