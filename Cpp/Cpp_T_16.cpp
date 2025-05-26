@@ -16,7 +16,7 @@ public:
         totalVal += p * q;
     }
 
-    ~SoldRes() {}
+    ~SoldRes() = default;
 
     int get_num() const { return num; }
 
@@ -40,8 +40,8 @@ int main() {
             SoldRes(102, 12, 24.56),
             SoldRes(103, 100, 21.5)
             };
-    for (int i = 0; i < sellers.size(); i++)
-        print(sellers[i]);
+    for (const auto& seller : sellers)
+        print(seller);
     cout << "总销售额：" << SoldRes::totalVal << endl;
     cout << "销售平均价格：" << SoldRes::totalVal / SoldRes::totalQty << endl;
     return 0;
