@@ -17,7 +17,7 @@ struct Answer {
 // 数据分布类型
 enum class e_DistType { RANDOM, SORTED, REVERSED };
 
-// 生成 0–99 之间的随机整数序列
+// 生成 0–9999 之间的随机整数序列
 vector<int> gen_data(size_t n, e_DistType dt) {
     vector<int> v(n);
     mt19937_64 rng(static_cast<unsigned long>(
