@@ -36,24 +36,65 @@ Zhangwu   202403          78.0
 
 #### 参考示例：
 
-0. 编写程序，在屏幕上输出 "Hello World"
+1. 定义一个输入结构体，从外部文本中读取输入信息，在程序运行界面输出
 
-```cpp
-/*  功能：在屏幕上输出“Hello World"
- *  作者：张三
- *  版本：1.0
- */
+```c++
+#include <array>
+#include <fstream>
+#include <iomanip>
 #include <iostream>
+#include <sstream>
+#include <string>
 using namespace std;
-int main(){
-    cout << "Hello World" << endl;
+
+struct Student {
+    string name;
+    string id;
+    double score{};
+};
+
+int main() {
+    array<Student, 3> students;
+    cout << "Please enter the name, ID, and score of 3 students:" << endl;
+    for (int i = 0; i < 3; ++i) {
+        cout << "Student #" << i + 1 << ":" << endl;
+        cin >> students[i].name >> students[i].id >> students[i].score;
+    }
+    ofstream outfile("students.txt");
+    if (!outfile) {
+        cerr << "Failed to write to file." << endl;
+        return -1;
+    }
+    for (const auto& s : students) {
+        outfile << s.name << " " << s.id << " " << s.score << endl;
+    }
+    outfile.close();
+    ifstream infile("students.txt");
+    if (!infile) {
+        cerr << "Failed to open file." << endl;
+        return -1;
+    }
+    array<Student, 3> students_;
+    Student tmp;
+    for (int i = 0; i < 3; i++)
+        if (infile >> tmp.name >> tmp.id >> tmp.score)
+            students_[i] = tmp;
+    infile.close();
+    cout << left << setw(10) << "Name"
+         << left << setw(10) << "ID"
+         << right << setw(10) << "Score" << endl;
+    for (const auto& s : students_) {
+        cout << left << setw(10) << s.name
+             << left << setw(10) << s.id
+             << right << setw(10) << fixed << setprecision(1) << s.score << endl;
+    }
     return 0;
 }
 ```
 
 运行结果截图：
 
-<img src="https://gitee.com/yannyyy/object-oriented-programming/raw/master/imgs/helloworld.png" alt="Hello World示例" style="zoom:150%;" />
+![1](8-1.png)
 
 ## 四、实验小结
 
@@ -63,16 +104,12 @@ int main(){
 
 **问题与解决办法**
 
-1、编译出错，提示“error: unexpected character <U+201C>”
-
-![](https://gitee.com/yannyyy/object-oriented-programming/raw/master/imgs/error.png)
-
-**解决办法：**查找资料后，发现中文状态输入双引号，系统只允许英文状态下双引号字符。改正后，错误消失,程序运行正常。
+无
 
 **心得体会**：
 
-- 编写C程序要遵循语法规范，特别是符号输入不仅要注意大小写，而且要注意英文输入法下输入。
++ 编写C程序要遵循语法规范，特别是符号输入不仅要注意大小写，而且要注意英文输入法下输入。
 
-- 应根据编译提示，定位和修改程序中的错误。
++ 应根据编译提示，定位和修改程序中的错误。
 
 #### 重要提示，各位同学务必遵照此规范和格式，使用markdown格式编辑实验报告并在系统中提交。本课程不接收其它方式提交的实验报告。切记切记！
