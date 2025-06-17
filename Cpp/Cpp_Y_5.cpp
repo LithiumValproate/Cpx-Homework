@@ -1,116 +1,104 @@
 #include <iostream>
 #include <string>
+#include <utility>
 using namespace std;
 
-class Person
-{
+class Person {
 protected:
     string name;
 
 public:
-    Person(string n) : name(n) {};
+    explicit Person(string n) : name(std::move(n)) {};
 
-    virtual ~Person() {};
+    virtual ~Person() = default;
 
-    virtual void display() const
-    {
+    virtual void display() const {
         cout << name << " ";
     }
 
-    virtual void modify(string n)
-    {
-        name = n;
+    virtual void modify(string n) {
+        name = std::move(n);
     }
 };
 
-class Student : virtual public Person
-{
+class Student : virtual public Person {
 protected:
     int stuId;
     string major;
 
 public:
-    Student(string n, int id, string m) : Person(n), stuId(id), major(m) {}
+    Student(const string& n, int id, string m) : Person(n), stuId(id), major(std::move(m)) {}
 
-    virtual ~Student() {};
+    ~Student() override = default;
 
-    virtual void display(bool s) const
-    {
+    virtual void display(bool s) const {
         if (s)
             Person::display();
         cout << stuId << " " << major << " ";
     }
 
-    virtual void modify(string n, int id, string m)
-    {
+    virtual void modify(const string n, const int id, const string m) {
         Person::modify(n);
         stuId = id;
         major = m;
     }
 };
 
-class Teacher : virtual public Person
-{
+class Teacher : virtual public Person {
 protected:
     string course;
 
 public:
-    Teacher(string n, string c) : Person(n), course(c) {};
+    Teacher(const string& n, string c) : Person(n), course(std::move(c)) {};
 
-    virtual ~Teacher() {};
+    ~Teacher() override = default;
 
-    virtual void display(bool s) const
-    {
+    virtual void display(const bool s) const {
         if (s)
             Person::display();
         cout << course << " ";
     }
 
-    virtual void modify(string n, string c)
-    {
+    virtual void modify(const string n, const string c) {
         Person::modify(n);
         course = c;
     }
 };
 
-class Assistant : public Student, public Teacher
-{
+class Assistant final : public Student, public Teacher {
 protected:
     int workHours;
 
 public:
-    Assistant(string n, int id, string m, string c, int h)
+    Assistant(const string& n, const int id, const string& m, const string& c, const int h)
         : Person(n), Student(n, id, m), Teacher(n, c), workHours(h) {};
 
-    ~Assistant() override {};
+    ~Assistant() override = default;
 
-    void display() const override
-    {
-        Student::display(1);
-        Teacher::display(0);
+    void display() const override {
+        Student::display(true);
+        Teacher::display(false);
         cout << workHours << " ";
     }
 
-    void modify(string n, int id, string m, string c, int h)
-    {
+    void modify(const string& n, const int id, const string& m, const string& c, const int h) {
         Person::modify(n);
-        stuId = id;
-        major = m;
-        course = c;
+        stuId     = id;
+        major     = m;
+        course    = c;
         workHours = h;
     }
 };
 
-int main()
-{
+int main() {
     Person p("John Doe");
     p.display();
     cout << endl;
     Student s("Jane Doe", 12345, "Computer Science");
-    s.display(1);
+    s.display(true);
     cout << endl;
     Teacher t("Dr. Smith", "Physics");
-    t.display(1);
+    t.display(true);
     cout << endl;
     Assistant a("Alice", 67890, "Mathematics", "Calculus", 20);
     a.display();
@@ -119,14 +107,13 @@ int main()
     p.display();
     cout << endl;
     s.modify("Jane Smith", 54321, "Biology");
-    s.display(1);
+    s.display(true);
     cout << endl;
     t.modify("Dr. Johnson", "Chemistry");
-    t.display(1);
+    t.display(true);
     cout << endl;
     a.modify("Alice Smith", 98765, "Statistics", "Linear Algebra", 30);
     a.display();
     cout << endl;
-    // system("pause");
     return 0;
 }
