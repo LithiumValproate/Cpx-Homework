@@ -7,98 +7,58 @@
 #include <vector>
 #include "json.hpp"
 
+using nlohmann::json;
+
+// -- data types --
+
 struct Date {
-    int year;
-    int month;
-    int day;
-    Date() : year(0), month(0), day(0) {}
+    int year{};
+    int month{};
+    int day{};
+
+    Date() = default;
     Date(int y, int m, int d) : year(y), month(m), day(d) {}
-
-    nlohmann::json to_json() const {
-        return nlohmann::json{
-            {"year", year},
-            {"month", month},
-            {"day", day}
-        };
-    }
-
-    void from_json(const nlohmann::json& j) {
-        year = j.at("year").get<int>();
-        month = j.at("month").get<int>();
-        day = j.at("day").get<int>();
-    }
 };
 
 struct Address {
     std::string city;
     std::string province;
-    Address() : city(""), province("") {}
-    Address(const std::string& c, const std::string& p) : city(c), province(p) {}
 
-    nlohmann::json to_json() const {
-        return nlohmann::json{
-            {"city", city},
-            {"province", province}
-        };
-    }
-
-    void from_json(const nlohmann::json& j) {
-        city = j.at("city").get<std::string>();
-        province = j.at("province").get<std::string>();
-    }
+    Address() = default;
+    Address(const std::string& c, const std::string& p)
+        : city(c), province(p) {}
 };
 
 struct Contact {
     std::string phone;
     std::string email;
-    Contact() : phone(""), email("") {}
-    Contact(const std::string& p, const std::string& e) : phone(p), email(e) {}
 
-    nlohmann::json to_json() const {
-        return nlohmann::json{
-            {"phone", phone},
-            {"email", email}
-        };
-    }
-
-    void from_json(const nlohmann::json& j) {
-        phone = j.at("phone").get<std::string>();
-        email = j.at("email").get<std::string>();
-    }
+    Contact() = default;
+    Contact(const std::string& p, const std::string& e)
+        : phone(p), email(e) {}
 };
 
 struct FamilyMember {
     std::string name;
     std::string relationship;
     Contact contactInfo;
-    FamilyMember() : name(""), relationship(""), contactInfo() {}
-    FamilyMember(const std::string& n, const std::string& r, const Contact& c)
+
+    FamilyMember() = default;
+    FamilyMember(const std::string& n,
+                 const std::string& r,
+                 const Contact& c)
         : name(n), relationship(r), contactInfo(c) {}
-
-    nlohmann::json to_json() const {
-        return nlohmann::json{
-            {"name", name},
-            {"relationship", relationship},
-            {"contactInfo", contactInfo.to_json()}
-        };
-    }
-
-    void from_json(const nlohmann::json& j) {
-        name = j.at("name").get<std::string>();
-        relationship = j.at("relationship").get<std::string>();
-        contactInfo.from_json(j.at("contactInfo"));
-    }
 };
 
-enum struct Status { Active, Leave, Graduated };
+enum class Status { Active = 0, Leave = 1, Graduated = 2 };
 
 class Student {
 private:
-    long id;
+    long id{};
     std::string name;
     std::string sex;
     Date birthdate;
-    int admissionYear;
+    int admissionYear{};
     std::string major;
     std::vector<std::string> courses;
     Contact contactInfo;
@@ -107,11 +67,8 @@ private:
     Status status{Status::Active};
 
 public:
-    Student()
-      : id(0), name(""), sex(""), birthdate(), admissionYear(0),
-        major(""), contactInfo(), address(), status(Status::Active) {}
-
-    Student(long id_,
+    Student() = default;
+    Student(long id,
             const std::string& n,
             const std::string& s,
             const Date& d,
@@ -120,143 +77,207 @@ public:
             const Contact& contact,
             const Address& addr,
             Status st = Status::Active)
-      : id(id_), name(n), sex(s), birthdate(d),
-        admissionYear(y), major(maj),
-        contactInfo(contact), address(addr), status(st) {}
+        : id{id}, name{n}, sex{s}, birthdate{d},
+          admissionYear{y}, major{maj},
+          contactInfo{contact}, address{addr}, status{st} {}
 
-    ~Student() = default;
+    // copy/move
+    Student(const Student&) = default;
+    Student(Student&&) noexcept = default;
+    Student& operator=(const Student&) = default;
+    Student& operator=(Student&&) noexcept = default;
 
-    // 学号
-    long get_id() const { return id; }
-    void set_id(long newId) { id = newId; }
+    // getters/setters
+    auto get_id() const -> long { return id; }
+    void set_id(long v) { id = v; }
 
-    // 姓名
     auto get_name() const -> const std::string& { return name; }
-    void set_name(const std::string& newName) { name = newName; }
+    void set_name(const std::string& v) { name = v; }
 
-    // 性别
     auto get_sex() const -> const std::string& { return sex; }
-    void set_sex(const std::string& newSex) { sex = newSex; }
+    void set_sex(const std::string& v) { sex = v; }
 
-    // 年龄
+    auto get_birthdate() const -> const Date& { return birthdate; }
+    void set_birthdate(const Date& v) { birthdate = v; }
+
+    auto get_admissionYear() const -> int { return admissionYear; }
+    void set_admissionYear(int v) { admissionYear = v; }
+
+    auto get_major() const -> const std::string& { return major; }
+    void set_major(const std::string& v) { major = v; }
+
+    auto get_courses() const -> const std::vector<std::string>& { return courses; }
+    void add_course(const std::string& c) { courses.push_back(c); }
+    void del_course(const std::string& c) {
+        courses.erase(
+                      std::remove(courses.begin(), courses.end(), c),
+                      courses.end());
+    }
+
+    auto get_contact() const -> Contact { return contactInfo; }
+    void set_contact(const Contact& v) { contactInfo = v; }
+
+    auto get_address() const -> Address { return address; }
+    void set_address(const Address& v) { address = v; }
+
+    auto get_familyMembers() const -> const std::vector<FamilyMember>& {
+        return familyMembers;
+    }
+    void set_familyMembers(const std::vector<FamilyMember>& v) {
+        familyMembers = v;
+    }
+    void add_familyMember(const FamilyMember& fm) {
+        familyMembers.push_back(fm);
+    }
+    void del_familyMember(const FamilyMember& fm) {
+        familyMembers.erase(
+                            std::remove_if(
+                                           familyMembers.begin(),
+                                           familyMembers.end(),
+                                           [&] (auto const& m) {
+                                               return m.name == fm.name
+                                                      && m.relationship == fm.relationship;
+                                           }),
+                            familyMembers.end());
+    }
+
+    auto get_status() const -> Status { return status; }
+    void set_status(Status s) { status = s; }
+
+    // age calculation
     int calculate_age() const {
         std::time_t t = std::time(nullptr);
-        std::tm* now = std::localtime(&t);
-        int age = (now->tm_year + 1900) - birthdate.year;
+        std::tm* now  = std::localtime(&t);
+        int age       = now->tm_year + 1900 - birthdate.year;
         if ((now->tm_mon + 1) < birthdate.month ||
-            ((now->tm_mon + 1) == birthdate.month && now->tm_mday < birthdate.day)) {
+            ((now->tm_mon + 1) == birthdate.month &&
+             now->tm_mday < birthdate.day)) {
             --age;
         }
         return age;
     }
     int get_age() const { return calculate_age(); }
 
-    // 生日
-    auto get_birthdate() const -> const Date& { return birthdate; }
-    void set_birthdate(const Date& newDate) { birthdate = newDate; }
-
-    // 入学年份
-    int get_admissionYear() const { return admissionYear; }
-    void set_admissionYear(int newYear) { admissionYear = newYear; }
-
-    // 专业
-    auto get_major() const -> const std::string& { return major; }
-    void set_major(const std::string& newMajor) { major = newMajor; }
-
-    // 课程
-    auto get_courses() const -> const std::vector<std::string>& { return courses; }
-    void add_course(const std::string& newCourse) {
-        courses.push_back(newCourse);
-    }
-    void del_course(const std::string& course) {
-        courses.erase(std::remove(courses.begin(), courses.end(), course), courses.end());
-    }
-
-    // 联系方式
-    Contact get_contact() const { return contactInfo; }
-    void set_contact(const Contact& newContact) { contactInfo = newContact; }
-
-    // 地址
-    Address get_address() const { return address; }
-    void set_address(const Address& newAddress) { address = newAddress; }
-
-    // 家庭成员
-    auto get_familyMembers() const -> const std::vector<FamilyMember>& { return familyMembers; }
-    void add_familyMember(const FamilyMember& newFamilyMember) {
-        familyMembers.push_back(newFamilyMember);
-    }
-    void del_familyMember(const FamilyMember& familyMember) {
-        familyMembers.erase(
-            std::remove_if(familyMembers.begin(), familyMembers.end(),
-                [&familyMember](const FamilyMember& fm) {
-                    return fm.name == familyMember.name
-                        && fm.relationship == familyMember.relationship;
-                }),
-            familyMembers.end());
-    }
-
-    Status get_status() const { return status; }
-    void set_status(Status s) { status = s; }
-
-    nlohmann::json to_json() const {
-        nlohmann::json j = {
-                {"id", id},
-                {"name", name},
-                {"birthdate", {{"year", birthdate.year}, {"month", birthdate.month}, {"day", birthdate.day}}},
-                {"admissionYear", admissionYear},
-                {"major", major},
-                {"courses", courses},
-                {"contact", {{"phone", contactInfo.phone}, {"email", contactInfo.email}}},
-                {"address", {{"province", address.province}, {"city", address.city}}},
-                {"status", status == Status::Active ? "Active" : status == Status::Leave ? "Leave" : "Graduated"},
-                {"familyMembers", nlohmann::json::array()}
-                };
-
-        for (const auto& member : familyMembers) {
-            j["familyMembers"].push_back(member.to_json());
-        }
-
-        return j;
-    }
-    void from_json(const nlohmann::json& j) {
-        id = j.at("id").get<long>();
-        name = j.at("name").get<std::string>();
-        birthdate.year  = j.at("birthdate").at("year");
-        birthdate.month = j.at("birthdate").at("month");
-        birthdate.day   = j.at("birthdate").at("day");
-        admissionYear = j.at("admissionYear");
-        major = j.at("major").get<std::string>();
-        courses = j.at("courses").get<std::vector<std::string>>();
-        contactInfo.phone = j.at("contact").at("phone");
-        contactInfo.email = j.at("contact").at("email");
-        address.province  = j.at("address").at("province");
-        address.city      = j.at("address").at("city");
-        std::string st    = j.at("status").get<std::string>();
-        status = (st == "Leave" ? Status::Leave :
-                 (st == "Graduated" ? Status::Graduated : Status::Active));
-
-        familyMembers.clear();
-        if (j.contains("familyMembers") && j["familyMembers"].is_array()) {
-            for (const auto& memberJson : j["familyMembers"]) {
-                FamilyMember member;
-                member.from_json(memberJson);
-                familyMembers.push_back(member);
-            }
-        }
-    }
-
-    friend std::ostream& operator<<(std::ostream& os, const Student& s) {
+    // streaming
+    friend std::ostream& operator<<(std::ostream& os,
+                                    const Student& s) {
         os << "学号: " << s.id << "\n"
-           << "姓名: " << s.name << "\n"
-           << "年龄: " << s.get_age() << "\n"
-           << "生日: " << s.birthdate.year << "-" << s.birthdate.month << "-" << s.birthdate.day << "\n"
-           << "入学年份: " << s.admissionYear << "\n"
-           << "专业: " << s.major << "\n"
-           << "电话: " << s.contactInfo.phone << ", 邮箱: " << s.contactInfo.email << "\n"
-           << "地址: " << s.address.province << "省，" << s.address.city << "市\n"
-           << "在读状态: "
-           << (s.status == Status::Active ? "在读" :
-               s.status == Status::Leave  ? "休学" : "毕业") << "\n";
+                << "姓名: " << s.name << "\n"
+                << "年龄: " << s.get_age() << "\n"
+                << "生日: " << s.birthdate.year << "-"
+                << s.birthdate.month << "-"
+                << s.birthdate.day << "\n"
+                << "入学年份: " << s.admissionYear << "\n"
+                << "专业: " << s.major << "\n"
+                << "电话: " << s.contactInfo.phone
+                << ", 邮箱: " << s.contactInfo.email << "\n"
+                << "地址: " << s.address.province
+                << "省, " << s.address.city << "市\n"
+                << "在读状态: "
+                << (s.status == Status::Active
+                        ? "在读"
+                        : s.status == Status::Leave
+                              ? "休学"
+                              : "毕业")
+                << "\n";
         return os;
     }
 };
+
+// -- JSON conversions --
+
+namespace nlohmann {
+    inline void to_json(json& j, const Date& d) {
+        j = json{
+                {"year", d.year},
+                {"month", d.month},
+                {"day", d.day}
+                };
+    }
+
+    inline void from_json(const json& j, Date& d) {
+        j.at("year").get_to(d.year);
+        j.at("month").get_to(d.month);
+        j.at("day").get_to(d.day);
+    }
+
+    inline void to_json(json& j, const Address& a) {
+        j = json{
+                {"city", a.city},
+                {"province", a.province}
+                };
+    }
+
+    inline void from_json(const json& j, Address& a) {
+        j.at("city").get_to(a.city);
+        j.at("province").get_to(a.province);
+    }
+
+    inline void to_json(json& j, const Contact& c) {
+        j = json{
+                {"phone", c.phone},
+                {"email", c.email}
+                };
+    }
+
+    inline void from_json(const json& j, Contact& c) {
+        j.at("phone").get_to(c.phone);
+        j.at("email").get_to(c.email);
+    }
+
+    inline void to_json(json& j, const FamilyMember& fm) {
+        j = json{
+                {"name", fm.name},
+                {"relationship", fm.relationship},
+                {"contactInfo", fm.contactInfo}
+                };
+    }
+
+    inline void from_json(const json& j, FamilyMember& fm) {
+        j.at("name").get_to(fm.name);
+        j.at("relationship").get_to(fm.relationship);
+        j.at("contactInfo").get_to(fm.contactInfo);
+    }
+
+    inline void to_json(json& j, const Status& s) {
+        static const char* names[] = {"Active", "Leave", "Graduated"};
+        j                          = names[static_cast<int>(s)];
+    }
+
+    inline void from_json(const json& j, Status& s) {
+        std::string v = j.get<std::string>();
+        if (v == "Leave") s = Status::Leave;
+        else if (v == "Graduated") s = Status::Graduated;
+        else s                       = Status::Active;
+    }
+
+    inline void to_json(json& j, const Student& stu) {
+        j = json{
+                {"id", stu.get_id()},
+                {"name", stu.get_name()},
+                {"sex", stu.get_sex()},
+                {"birthdate", stu.get_birthdate()},
+                {"admissionYear", stu.get_admissionYear()},
+                {"major", stu.get_major()},
+                {"courses", stu.get_courses()},
+                {"contact", stu.get_contact()},
+                {"address", stu.get_address()},
+                {"status", stu.get_status()},
+                {"familyMembers", stu.get_familyMembers()}
+                };
+    }
+    inline void from_json(const json& j, Student& stu) {
+        long id;                        j.at("id").get_to(id);                  stu.set_id(id);
+        std::string name;               j.at("name").get_to(name);              stu.set_name(name);
+        std::string sex;                j.at("sex").get_to(sex);                stu.set_sex(sex);
+        Date d;                         j.at("birthdate").get_to(d);            stu.set_birthdate(d);
+        int ay;                         j.at("admissionYear").get_to(ay);       stu.set_admissionYear(ay);
+        std::string maj;                j.at("major").get_to(maj);              stu.set_major(maj);
+        std::vector<std::string> crs;   j.at("courses").get_to(crs);            stu.get_courses().clear();
+        for (auto& c : crs)      stu.add_course(c);
+        Contact ct;                     j.at("contact").get_to(ct);             stu.set_contact(ct);
+        Address ad;                     j.at("address").get_to(ad);             stu.set_address(ad);
+        Status st;                      j.at("status").get_to(st);              stu.set_status(st);
+        std::vector<FamilyMember> fms;  j.at("familyMembers").get_to(fms);      stu.set_familyMembers(fms);
+    }
+}
