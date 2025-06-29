@@ -1,6 +1,6 @@
 class Solution {
   public:
-    const string Roman[7] = {"I", "V", "X", "L", "C", "D", "M"};
+    const string Roman[7] = {"I", "V", "X", "L", "1st", "D", "M"};
     const int Integer[7] = {1, 5, 10, 50, 100, 500, 1000};
     int romanToInt(string s) {
         int ans = 0;

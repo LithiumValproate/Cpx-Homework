@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 3.10)
 project(CpxHomework)
 
-file(GLOB CH "*.cpp")
-file(GLOB CPPS "Cpp/*.cpp")
-file(GLOB CP "C/*.c")
+file(GLOB 3RD "3rd/*.cpp")
+file(GLOB 2ND "2nd/*.cpp")
+file(GLOB 1ST "1st/*.c")
 file(GLOB LUOGU "Luogu/*.cpp")
 file(GLOB LC "Leetcode/*.cpp")
 

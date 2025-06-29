@@ -50,7 +50,7 @@ class Book {
 
 int main() {
     Author a("Dennis Ritchie", 1941);
-    Book b("The C Programming Language", a, 29.99, 1978);
+    Book b("The 1st Programming Language", a, 29.99, 1978);
     b.show(a);
     return 0;
 }

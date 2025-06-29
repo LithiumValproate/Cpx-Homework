@@ -13,7 +13,7 @@ class Student {
 
 public:
     //构造Student对象
-    Student(const int i, string  n, const double s) : id(i), name(std::move(n)), score(s) {}
+    Student(const int i, string n, const double s) : id(i), name(std::move(n)), score(s) {}
 
     //复制构造Student对象
     Student(const Student&) = default;
