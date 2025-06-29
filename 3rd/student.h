@@ -21,12 +21,12 @@ struct Date {
 };
 
 struct Address {
-    std::string city;
     std::string province;
+    std::string city;
 
     Address() = default;
-    Address(const std::string& c, const std::string& p)
-        : city(c), province(p) {}
+    Address(const std::string& p, const std::string& c)
+        : province(p), city(c) {}
 };
 
 struct Contact {
@@ -50,13 +50,15 @@ struct FamilyMember {
         : name(n), relationship(r), contactInfo(c) {}
 };
 
+enum class Sex { Male = 0, Female = 1};
+
 enum class Status { Active = 0, Leave = 1, Graduated = 2 };
 
 class Student {
 private:
     long id{};
     std::string name;
-    std::string sex;
+    Sex sex; // 修改为枚举类型
     Date birthdate;
     int admissionYear{};
     std::string major;
@@ -70,7 +72,7 @@ public:
     Student() = default;
     Student(long id,
             const std::string& n,
-            const std::string& s,
+            Sex s,
             const Date& d,
             int y,
             const std::string& maj,
@@ -94,8 +96,8 @@ public:
     auto get_name() const -> const std::string& { return name; }
     void set_name(const std::string& v) { name = v; }
 
-    auto get_sex() const -> const std::string& { return sex; }
-    void set_sex(const std::string& v) { sex = v; }
+    auto get_sex() const -> Sex { return sex; }
+    void set_sex(Sex v) { sex = v; }
 
     auto get_birthdate() const -> const Date& { return birthdate; }
     void set_birthdate(const Date& v) { birthdate = v; }
@@ -113,11 +115,12 @@ public:
                       std::remove(courses.begin(), courses.end(), c),
                       courses.end());
     }
+    void clear_courses() { courses.clear(); }
 
-    auto get_contact() const -> Contact { return contactInfo; }
+    auto get_contact() const & -> const Contact& { return contactInfo; }
     void set_contact(const Contact& v) { contactInfo = v; }
 
-    auto get_address() const -> Address { return address; }
+    auto get_address() const & -> const Address& { return address; }
     void set_address(const Address& v) { address = v; }
 
     auto get_familyMembers() const -> const std::vector<FamilyMember>& {
@@ -164,6 +167,7 @@ public:
         os << "学号: " << s.id << "\n"
                 << "姓名: " << s.name << "\n"
                 << "年龄: " << s.get_age() << "\n"
+                << "性别: " << (s.get_sex() == Sex::Male ? "男" : "女") << "\n"
                 << "生日: " << s.birthdate.year << "-"
                 << s.birthdate.month << "-"
                 << s.birthdate.day << "\n"
@@ -194,7 +198,6 @@ namespace nlohmann {
                 {"day", d.day}
                 };
     }
-
     inline void from_json(const json& j, Date& d) {
         j.at("year").get_to(d.year);
         j.at("month").get_to(d.month);
@@ -207,7 +210,6 @@ namespace nlohmann {
                 {"province", a.province}
                 };
     }
-
     inline void from_json(const json& j, Address& a) {
         j.at("city").get_to(a.city);
         j.at("province").get_to(a.province);
@@ -219,7 +221,6 @@ namespace nlohmann {
                 {"email", c.email}
                 };
     }
-
     inline void from_json(const json& j, Contact& c) {
         j.at("phone").get_to(c.phone);
         j.at("email").get_to(c.email);
@@ -232,19 +233,28 @@ namespace nlohmann {
                 {"contactInfo", fm.contactInfo}
                 };
     }
-
     inline void from_json(const json& j, FamilyMember& fm) {
         j.at("name").get_to(fm.name);
         j.at("relationship").get_to(fm.relationship);
         j.at("contactInfo").get_to(fm.contactInfo);
     }
 
-    inline void to_json(json& j, const Status& s) {
+    inline void to_json(json& j, const Sex& s) {
+        static const char* names[] = {"Male", "Female", "Other"};
+        j = names[static_cast<int>(s)];
+    }
+    inline void from_json(const json& j, Sex& s) {
+        std::string v = j.get<std::string>();
+        if (v == "Female") s = Sex::Female;
+        else if (v == "Other") s = Sex::Other;
+        else s = Sex::Male;
+    }
+
+    inline void to_json(json& j, const Status& st) {
         static const char* names[] = {"Active", "Leave", "Graduated"};
         j                          = names[static_cast<int>(s)];
     }
-
-    inline void from_json(const json& j, Status& s) {
+    inline void from_json(const json& j, Status& st) {
         std::string v = j.get<std::string>();
         if (v == "Leave") s = Status::Leave;
         else if (v == "Graduated") s = Status::Graduated;
@@ -269,11 +279,11 @@ namespace nlohmann {
     inline void from_json(const json& j, Student& stu) {
         long id;                        j.at("id").get_to(id);                  stu.set_id(id);
         std::string name;               j.at("name").get_to(name);              stu.set_name(name);
-        std::string sex;                j.at("sex").get_to(sex);                stu.set_sex(sex);
+        Sex sex;                        j.at("sex").get_to(sex);                stu.set_sex(sex);
         Date d;                         j.at("birthdate").get_to(d);            stu.set_birthdate(d);
         int ay;                         j.at("admissionYear").get_to(ay);       stu.set_admissionYear(ay);
         std::string maj;                j.at("major").get_to(maj);              stu.set_major(maj);
-        std::vector<std::string> crs;   j.at("courses").get_to(crs);            stu.get_courses().clear();
+        std::vector<std::string> crs;   j.at("courses").get_to(crs);            stu.clear_courses();
         for (auto& c : crs)      stu.add_course(c);
         Contact ct;                     j.at("contact").get_to(ct);             stu.set_contact(ct);
         Address ad;                     j.at("address").get_to(ad);             stu.set_address(ad);
