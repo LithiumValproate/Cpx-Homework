@@ -52,9 +52,9 @@ template <> constexpr inline auto WebBridge::qt_create_metaobjectdata<qt_meta_ta
         "show_notification",
         "minimize_to_tray",
         "get_app_info",
+        "get_students",
         "add_student",
         "studentData",
-        "get_students",
         "update_student",
         "delete_student",
         "studentId",
@@ -91,15 +91,15 @@ template <> constexpr inline auto WebBridge::qt_create_metaobjectdata<qt_meta_ta
         QtMocHelpers::SlotData<void()>(12, 2, QMC::AccessPublic, QMetaType::Void),
         // Slot 'get_app_info'
         QtMocHelpers::SlotData<QJsonObject()>(13, 2, QMC::AccessPublic, QMetaType::QJsonObject),
-        // Slot 'add_student'
-        QtMocHelpers::SlotData<void(const QJsonObject &)>(14, 2, QMC::AccessPublic, QMetaType::Void, {{
-            { QMetaType::QJsonObject, 15 },
-        }}),
         // Slot 'get_students'
-        QtMocHelpers::SlotData<QJsonArray()>(16, 2, QMC::AccessPublic, QMetaType::QJsonArray),
+        QtMocHelpers::SlotData<QJsonArray()>(14, 2, QMC::AccessPublic, QMetaType::QJsonArray),
+        // Slot 'add_student'
+        QtMocHelpers::SlotData<void(const QJsonObject &)>(15, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { QMetaType::QJsonObject, 16 },
+        }}),
         // Slot 'update_student'
         QtMocHelpers::SlotData<void(const QJsonObject &)>(17, 2, QMC::AccessPublic, QMetaType::Void, {{
-            { QMetaType::QJsonObject, 15 },
+            { QMetaType::QJsonObject, 16 },
         }}),
         // Slot 'delete_student'
         QtMocHelpers::SlotData<void(long)>(18, 2, QMC::AccessPublic, QMetaType::Void, {{
@@ -141,9 +141,9 @@ void WebBridge::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, v
         case 6: _t->minimize_to_tray(); break;
         case 7: { QJsonObject _r = _t->get_app_info();
             if (_a[0]) *reinterpret_cast< QJsonObject*>(_a[0]) = std::move(_r); }  break;
-        case 8: _t->add_student((*reinterpret_cast< std::add_pointer_t<QJsonObject>>(_a[1]))); break;
-        case 9: { QJsonArray _r = _t->get_students();
+        case 8: { QJsonArray _r = _t->get_students();
             if (_a[0]) *reinterpret_cast< QJsonArray*>(_a[0]) = std::move(_r); }  break;
+        case 9: _t->add_student((*reinterpret_cast< std::add_pointer_t<QJsonObject>>(_a[1]))); break;
         case 10: _t->update_student((*reinterpret_cast< std::add_pointer_t<QJsonObject>>(_a[1]))); break;
         case 11: _t->delete_student((*reinterpret_cast< std::add_pointer_t<long>>(_a[1]))); break;
         case 12: _t->save_students(); break;

@@ -39,30 +39,30 @@ template <> constexpr inline auto MainWindow::qt_create_metaobjectdata<qt_meta_t
     namespace QMC = QtMocConstants;
     QtMocHelpers::StringRefStorage qt_stringData {
         "MainWindow",
-        "onLoadStarted",
+        "on_load_started",
         "",
-        "onLoadProgress",
+        "on_load_progress",
         "progress",
-        "onLoadFinished",
+        "on_load_finished",
         "success",
-        "refreshPage",
-        "showAbout"
+        "refresh_page",
+        "show_about"
     };
 
     QtMocHelpers::UintData qt_methods {
-        // Slot 'onLoadStarted'
+        // Slot 'on_load_started'
         QtMocHelpers::SlotData<void()>(1, 2, QMC::AccessPrivate, QMetaType::Void),
-        // Slot 'onLoadProgress'
+        // Slot 'on_load_progress'
         QtMocHelpers::SlotData<void(int)>(3, 2, QMC::AccessPrivate, QMetaType::Void, {{
             { QMetaType::Int, 4 },
         }}),
-        // Slot 'onLoadFinished'
+        // Slot 'on_load_finished'
         QtMocHelpers::SlotData<void(bool)>(5, 2, QMC::AccessPrivate, QMetaType::Void, {{
             { QMetaType::Bool, 6 },
         }}),
-        // Slot 'refreshPage'
+        // Slot 'refresh_page'
         QtMocHelpers::SlotData<void()>(7, 2, QMC::AccessPrivate, QMetaType::Void),
-        // Slot 'showAbout'
+        // Slot 'show_about'
         QtMocHelpers::SlotData<void()>(8, 2, QMC::AccessPrivate, QMetaType::Void),
     };
     QtMocHelpers::UintData qt_properties {
@@ -87,11 +87,11 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
     auto *_t = static_cast<MainWindow *>(_o);
     if (_c == QMetaObject::InvokeMetaMethod) {
         switch (_id) {
-        case 0: _t->onLoadStarted(); break;
-        case 1: _t->onLoadProgress((*reinterpret_cast< std::add_pointer_t<int>>(_a[1]))); break;
-        case 2: _t->onLoadFinished((*reinterpret_cast< std::add_pointer_t<bool>>(_a[1]))); break;
-        case 3: _t->refreshPage(); break;
-        case 4: _t->showAbout(); break;
+        case 0: _t->on_load_started(); break;
+        case 1: _t->on_load_progress((*reinterpret_cast< std::add_pointer_t<int>>(_a[1]))); break;
+        case 2: _t->on_load_finished((*reinterpret_cast< std::add_pointer_t<bool>>(_a[1]))); break;
+        case 3: _t->refresh_page(); break;
+        case 4: _t->show_about(); break;
         default: ;
         }
     }

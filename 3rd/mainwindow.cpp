@@ -86,7 +86,7 @@ void MainWindow::setup_web_view() {
     m_webView->page()->setWebChannel(m_webChannel);
 
     // 加载HTML文件
-    m_webView->load(QUrl("qrc:/web/web/student-management.html"));
+    m_webView->load(QUrl("qrc:/web/web/index.html"));
 }
 
 void MainWindow::on_load_started() {

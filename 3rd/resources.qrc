@@ -1,7 +1,7 @@
 <RCC>
     <qresource prefix="/web">
-        <file>web/student-management.html</file>
+        <file>web/index.html</file>
         <file>web/styles.css</file>
-        <file>web/script.js</file>
+        <file>web/app.js</file>
     </qresource>
 </RCC>
