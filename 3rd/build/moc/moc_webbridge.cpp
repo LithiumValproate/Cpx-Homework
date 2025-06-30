@@ -43,23 +43,23 @@ template <> constexpr inline auto WebBridge::qt_create_metaobjectdata<qt_meta_ta
         "",
         "filePath",
         "fileSaveRequested",
-        "openFileDialog",
+        "open_file_dialog",
         "title",
         "filter",
-        "saveFileDialog",
-        "logMessage",
+        "save_file_dialog",
+        "log_message",
         "message",
-        "showNotification",
-        "minimizeToTray",
-        "getAppInfo",
-        "addStudent",
+        "show_notification",
+        "minimize_to_tray",
+        "get_app_info",
+        "add_student",
         "studentData",
-        "getStudents",
-        "updateStudent",
-        "deleteStudent",
+        "get_students",
+        "update_student",
+        "delete_student",
         "studentId",
-        "saveStudents",
-        "loadStudents"
+        "save_students",
+        "load_students"
     };
 
     QtMocHelpers::UintData qt_methods {
@@ -71,43 +71,43 @@ template <> constexpr inline auto WebBridge::qt_create_metaobjectdata<qt_meta_ta
         QtMocHelpers::SignalData<void(const QString &)>(4, 2, QMC::AccessPublic, QMetaType::Void, {{
             { QMetaType::QString, 3 },
         }}),
-        // Slot 'openFileDialog'
+        // Slot 'open_file_dialog'
         QtMocHelpers::SlotData<void(const QString &, const QString &)>(5, 2, QMC::AccessPublic, QMetaType::Void, {{
             { QMetaType::QString, 6 }, { QMetaType::QString, 7 },
         }}),
-        // Slot 'saveFileDialog'
+        // Slot 'save_file_dialog'
         QtMocHelpers::SlotData<void(const QString &, const QString &)>(8, 2, QMC::AccessPublic, QMetaType::Void, {{
             { QMetaType::QString, 6 }, { QMetaType::QString, 7 },
         }}),
-        // Slot 'logMessage'
+        // Slot 'log_message'
         QtMocHelpers::SlotData<void(const QString &)>(9, 2, QMC::AccessPublic, QMetaType::Void, {{
             { QMetaType::QString, 10 },
         }}),
-        // Slot 'showNotification'
+        // Slot 'show_notification'
         QtMocHelpers::SlotData<void(const QString &, const QString &)>(11, 2, QMC::AccessPublic, QMetaType::Void, {{
             { QMetaType::QString, 6 }, { QMetaType::QString, 10 },
         }}),
-        // Slot 'minimizeToTray'
+        // Slot 'minimize_to_tray'
         QtMocHelpers::SlotData<void()>(12, 2, QMC::AccessPublic, QMetaType::Void),
-        // Slot 'getAppInfo'
+        // Slot 'get_app_info'
         QtMocHelpers::SlotData<QJsonObject()>(13, 2, QMC::AccessPublic, QMetaType::QJsonObject),
-        // Slot 'addStudent'
+        // Slot 'add_student'
         QtMocHelpers::SlotData<void(const QJsonObject &)>(14, 2, QMC::AccessPublic, QMetaType::Void, {{
             { QMetaType::QJsonObject, 15 },
         }}),
-        // Slot 'getStudents'
+        // Slot 'get_students'
         QtMocHelpers::SlotData<QJsonArray()>(16, 2, QMC::AccessPublic, QMetaType::QJsonArray),
-        // Slot 'updateStudent'
+        // Slot 'update_student'
         QtMocHelpers::SlotData<void(const QJsonObject &)>(17, 2, QMC::AccessPublic, QMetaType::Void, {{
             { QMetaType::QJsonObject, 15 },
         }}),
-        // Slot 'deleteStudent'
+        // Slot 'delete_student'
         QtMocHelpers::SlotData<void(long)>(18, 2, QMC::AccessPublic, QMetaType::Void, {{
             { QMetaType::Long, 19 },
         }}),
-        // Slot 'saveStudents'
+        // Slot 'save_students'
         QtMocHelpers::SlotData<void()>(20, 2, QMC::AccessPublic, QMetaType::Void),
-        // Slot 'loadStudents'
+        // Slot 'load_students'
         QtMocHelpers::SlotData<void()>(21, 2, QMC::AccessPublic, QMetaType::Void),
     };
     QtMocHelpers::UintData qt_properties {
@@ -134,20 +134,20 @@ void WebBridge::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, v
         switch (_id) {
         case 0: _t->fileSelected((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1]))); break;
         case 1: _t->fileSaveRequested((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1]))); break;
-        case 2: _t->openFileDialog((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[2]))); break;
-        case 3: _t->saveFileDialog((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[2]))); break;
-        case 4: _t->logMessage((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1]))); break;
-        case 5: _t->showNotification((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[2]))); break;
-        case 6: _t->minimizeToTray(); break;
-        case 7: { QJsonObject _r = _t->getAppInfo();
+        case 2: _t->open_file_dialog((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[2]))); break;
+        case 3: _t->save_file_dialog((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[2]))); break;
+        case 4: _t->log_message((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1]))); break;
+        case 5: _t->show_notification((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[2]))); break;
+        case 6: _t->minimize_to_tray(); break;
+        case 7: { QJsonObject _r = _t->get_app_info();
             if (_a[0]) *reinterpret_cast< QJsonObject*>(_a[0]) = std::move(_r); }  break;
-        case 8: _t->addStudent((*reinterpret_cast< std::add_pointer_t<QJsonObject>>(_a[1]))); break;
-        case 9: { QJsonArray _r = _t->getStudents();
+        case 8: _t->add_student((*reinterpret_cast< std::add_pointer_t<QJsonObject>>(_a[1]))); break;
+        case 9: { QJsonArray _r = _t->get_students();
             if (_a[0]) *reinterpret_cast< QJsonArray*>(_a[0]) = std::move(_r); }  break;
-        case 10: _t->updateStudent((*reinterpret_cast< std::add_pointer_t<QJsonObject>>(_a[1]))); break;
-        case 11: _t->deleteStudent((*reinterpret_cast< std::add_pointer_t<long>>(_a[1]))); break;
-        case 12: _t->saveStudents(); break;
-        case 13: _t->loadStudents(); break;
+        case 10: _t->update_student((*reinterpret_cast< std::add_pointer_t<QJsonObject>>(_a[1]))); break;
+        case 11: _t->delete_student((*reinterpret_cast< std::add_pointer_t<long>>(_a[1]))); break;
+        case 12: _t->save_students(); break;
+        case 13: _t->load_students(); break;
         default: ;
         }
     }
