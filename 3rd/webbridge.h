@@ -3,32 +3,45 @@
 
 #include <QObject>
 #include <QJsonObject>
+#include <QJsonArray>
+#include <vector>
 #include "stu_with_score.h"
+
+// 前向声明 QWidget
+class QWidget;
 
 class WebBridge : public QObject
 {
     Q_OBJECT
 
 public:
+    // *** 修改这里：将 QWidget* 改为 QObject* ***
     explicit WebBridge(QObject *parent = nullptr);
 
+    signals:
+        void fileSelected(const QString &filePath);
+    void fileSaveRequested(const QString &filePath);
+
 public slots:
-    QString openFileDialog(const QString &caption = QString(), const QString &filter = QString());
-    QString saveFileDialog(const QString &caption = QString(), const QString &filter = QString());
-    bool saveFile(const QString &filePath, const QString &content);
-    QString loadFile(const QString &filePath);
+    void openFileDialog(const QString &title, const QString &filter);
+    void saveFileDialog(const QString &title, const QString &filter);
+    void logMessage(const QString &message);
     void showNotification(const QString &title, const QString &message);
+    void minimizeToTray();
     QJsonObject getAppInfo();
     void addStudent(const QJsonObject &studentData);
     QJsonArray getStudents();
-
-signals:
-    void fileOpened(const QString &content);
-    void fileSaved(bool success);
-    void studentDataChanged();
+    void updateStudent(const QJsonObject &studentData);
+    void deleteStudent(long studentId);
+    void saveStudents();
+    void loadStudents();
 
 private:
-    QString m_lastDirectory;
+    void saveStudentsToFile(const QString &filePath);
+    void loadStudentsFromFile(const QString &filePath);
+    QString getBackupPath() const;
+
+    QWidget *m_parentWidget; // 用于弹窗的父窗口指针
     std::vector<Stu_withScore> m_students;
 };
 

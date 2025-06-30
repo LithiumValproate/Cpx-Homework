@@ -39,67 +39,76 @@ template <> constexpr inline auto WebBridge::qt_create_metaobjectdata<qt_meta_ta
     namespace QMC = QtMocConstants;
     QtMocHelpers::StringRefStorage qt_stringData {
         "WebBridge",
-        "fileOpened",
+        "fileSelected",
         "",
-        "content",
-        "fileSaved",
-        "success",
+        "filePath",
+        "fileSaveRequested",
         "openFileDialog",
-        "caption",
+        "title",
         "filter",
         "saveFileDialog",
-        "saveFile",
-        "filePath",
-        "loadFile",
-        "showNotification",
-        "title",
+        "logMessage",
         "message",
-        "getAppInfo"
+        "showNotification",
+        "minimizeToTray",
+        "getAppInfo",
+        "addStudent",
+        "studentData",
+        "getStudents",
+        "updateStudent",
+        "deleteStudent",
+        "studentId",
+        "saveStudents",
+        "loadStudents"
     };
 
     QtMocHelpers::UintData qt_methods {
-        // Signal 'fileOpened'
+        // Signal 'fileSelected'
         QtMocHelpers::SignalData<void(const QString &)>(1, 2, QMC::AccessPublic, QMetaType::Void, {{
             { QMetaType::QString, 3 },
         }}),
-        // Signal 'fileSaved'
-        QtMocHelpers::SignalData<void(bool)>(4, 2, QMC::AccessPublic, QMetaType::Void, {{
-            { QMetaType::Bool, 5 },
+        // Signal 'fileSaveRequested'
+        QtMocHelpers::SignalData<void(const QString &)>(4, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { QMetaType::QString, 3 },
         }}),
         // Slot 'openFileDialog'
-        QtMocHelpers::SlotData<QString(const QString &, const QString &)>(6, 2, QMC::AccessPublic, QMetaType::QString, {{
-            { QMetaType::QString, 7 }, { QMetaType::QString, 8 },
-        }}),
-        // Slot 'openFileDialog'
-        QtMocHelpers::SlotData<QString(const QString &)>(6, 2, QMC::AccessPublic | QMC::MethodCloned, QMetaType::QString, {{
-            { QMetaType::QString, 7 },
-        }}),
-        // Slot 'openFileDialog'
-        QtMocHelpers::SlotData<QString()>(6, 2, QMC::AccessPublic | QMC::MethodCloned, QMetaType::QString),
-        // Slot 'saveFileDialog'
-        QtMocHelpers::SlotData<QString(const QString &, const QString &)>(9, 2, QMC::AccessPublic, QMetaType::QString, {{
-            { QMetaType::QString, 7 }, { QMetaType::QString, 8 },
+        QtMocHelpers::SlotData<void(const QString &, const QString &)>(5, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { QMetaType::QString, 6 }, { QMetaType::QString, 7 },
         }}),
         // Slot 'saveFileDialog'
-        QtMocHelpers::SlotData<QString(const QString &)>(9, 2, QMC::AccessPublic | QMC::MethodCloned, QMetaType::QString, {{
-            { QMetaType::QString, 7 },
+        QtMocHelpers::SlotData<void(const QString &, const QString &)>(8, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { QMetaType::QString, 6 }, { QMetaType::QString, 7 },
         }}),
-        // Slot 'saveFileDialog'
-        QtMocHelpers::SlotData<QString()>(9, 2, QMC::AccessPublic | QMC::MethodCloned, QMetaType::QString),
-        // Slot 'saveFile'
-        QtMocHelpers::SlotData<bool(const QString &, const QString &)>(10, 2, QMC::AccessPublic, QMetaType::Bool, {{
-            { QMetaType::QString, 11 }, { QMetaType::QString, 3 },
-        }}),
-        // Slot 'loadFile'
-        QtMocHelpers::SlotData<QString(const QString &)>(12, 2, QMC::AccessPublic, QMetaType::QString, {{
-            { QMetaType::QString, 11 },
+        // Slot 'logMessage'
+        QtMocHelpers::SlotData<void(const QString &)>(9, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { QMetaType::QString, 10 },
         }}),
         // Slot 'showNotification'
-        QtMocHelpers::SlotData<void(const QString &, const QString &)>(13, 2, QMC::AccessPublic, QMetaType::Void, {{
-            { QMetaType::QString, 14 }, { QMetaType::QString, 15 },
+        QtMocHelpers::SlotData<void(const QString &, const QString &)>(11, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { QMetaType::QString, 6 }, { QMetaType::QString, 10 },
         }}),
+        // Slot 'minimizeToTray'
+        QtMocHelpers::SlotData<void()>(12, 2, QMC::AccessPublic, QMetaType::Void),
         // Slot 'getAppInfo'
-        QtMocHelpers::SlotData<QJsonObject()>(16, 2, QMC::AccessPublic, QMetaType::QJsonObject),
+        QtMocHelpers::SlotData<QJsonObject()>(13, 2, QMC::AccessPublic, QMetaType::QJsonObject),
+        // Slot 'addStudent'
+        QtMocHelpers::SlotData<void(const QJsonObject &)>(14, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { QMetaType::QJsonObject, 15 },
+        }}),
+        // Slot 'getStudents'
+        QtMocHelpers::SlotData<QJsonArray()>(16, 2, QMC::AccessPublic, QMetaType::QJsonArray),
+        // Slot 'updateStudent'
+        QtMocHelpers::SlotData<void(const QJsonObject &)>(17, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { QMetaType::QJsonObject, 15 },
+        }}),
+        // Slot 'deleteStudent'
+        QtMocHelpers::SlotData<void(long)>(18, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { QMetaType::Long, 19 },
+        }}),
+        // Slot 'saveStudents'
+        QtMocHelpers::SlotData<void()>(20, 2, QMC::AccessPublic, QMetaType::Void),
+        // Slot 'loadStudents'
+        QtMocHelpers::SlotData<void()>(21, 2, QMC::AccessPublic, QMetaType::Void),
     };
     QtMocHelpers::UintData qt_properties {
     };
@@ -123,34 +132,29 @@ void WebBridge::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, v
     auto *_t = static_cast<WebBridge *>(_o);
     if (_c == QMetaObject::InvokeMetaMethod) {
         switch (_id) {
-        case 0: _t->fileOpened((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1]))); break;
-        case 1: _t->fileSaved((*reinterpret_cast< std::add_pointer_t<bool>>(_a[1]))); break;
-        case 2: { QString _r = _t->openFileDialog((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[2])));
-            if (_a[0]) *reinterpret_cast< QString*>(_a[0]) = std::move(_r); }  break;
-        case 3: { QString _r = _t->openFileDialog((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])));
-            if (_a[0]) *reinterpret_cast< QString*>(_a[0]) = std::move(_r); }  break;
-        case 4: { QString _r = _t->openFileDialog();
-            if (_a[0]) *reinterpret_cast< QString*>(_a[0]) = std::move(_r); }  break;
-        case 5: { QString _r = _t->saveFileDialog((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[2])));
-            if (_a[0]) *reinterpret_cast< QString*>(_a[0]) = std::move(_r); }  break;
-        case 6: { QString _r = _t->saveFileDialog((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])));
-            if (_a[0]) *reinterpret_cast< QString*>(_a[0]) = std::move(_r); }  break;
-        case 7: { QString _r = _t->saveFileDialog();
-            if (_a[0]) *reinterpret_cast< QString*>(_a[0]) = std::move(_r); }  break;
-        case 8: { bool _r = _t->saveFile((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[2])));
-            if (_a[0]) *reinterpret_cast< bool*>(_a[0]) = std::move(_r); }  break;
-        case 9: { QString _r = _t->loadFile((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])));
-            if (_a[0]) *reinterpret_cast< QString*>(_a[0]) = std::move(_r); }  break;
-        case 10: _t->showNotification((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[2]))); break;
-        case 11: { QJsonObject _r = _t->getAppInfo();
+        case 0: _t->fileSelected((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1]))); break;
+        case 1: _t->fileSaveRequested((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1]))); break;
+        case 2: _t->openFileDialog((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[2]))); break;
+        case 3: _t->saveFileDialog((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[2]))); break;
+        case 4: _t->logMessage((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1]))); break;
+        case 5: _t->showNotification((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[2]))); break;
+        case 6: _t->minimizeToTray(); break;
+        case 7: { QJsonObject _r = _t->getAppInfo();
             if (_a[0]) *reinterpret_cast< QJsonObject*>(_a[0]) = std::move(_r); }  break;
+        case 8: _t->addStudent((*reinterpret_cast< std::add_pointer_t<QJsonObject>>(_a[1]))); break;
+        case 9: { QJsonArray _r = _t->getStudents();
+            if (_a[0]) *reinterpret_cast< QJsonArray*>(_a[0]) = std::move(_r); }  break;
+        case 10: _t->updateStudent((*reinterpret_cast< std::add_pointer_t<QJsonObject>>(_a[1]))); break;
+        case 11: _t->deleteStudent((*reinterpret_cast< std::add_pointer_t<long>>(_a[1]))); break;
+        case 12: _t->saveStudents(); break;
+        case 13: _t->loadStudents(); break;
         default: ;
         }
     }
     if (_c == QMetaObject::IndexOfMethod) {
-        if (QtMocHelpers::indexOfMethod<void (WebBridge::*)(const QString & )>(_a, &WebBridge::fileOpened, 0))
+        if (QtMocHelpers::indexOfMethod<void (WebBridge::*)(const QString & )>(_a, &WebBridge::fileSelected, 0))
             return;
-        if (QtMocHelpers::indexOfMethod<void (WebBridge::*)(bool )>(_a, &WebBridge::fileSaved, 1))
+        if (QtMocHelpers::indexOfMethod<void (WebBridge::*)(const QString & )>(_a, &WebBridge::fileSaveRequested, 1))
             return;
     }
 }
@@ -174,26 +178,26 @@ int WebBridge::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 12)
+        if (_id < 14)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 12;
+        _id -= 14;
     }
     if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 12)
+        if (_id < 14)
             *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType();
-        _id -= 12;
+        _id -= 14;
     }
     return _id;
 }
 
 // SIGNAL 0
-void WebBridge::fileOpened(const QString & _t1)
+void WebBridge::fileSelected(const QString & _t1)
 {
     QMetaObject::activate<void>(this, &staticMetaObject, 0, nullptr, _t1);
 }
 
 // SIGNAL 1
-void WebBridge::fileSaved(bool _t1)
+void WebBridge::fileSaveRequested(const QString & _t1)
 {
     QMetaObject::activate<void>(this, &staticMetaObject, 1, nullptr, _t1);
 }
