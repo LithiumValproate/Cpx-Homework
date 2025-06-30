@@ -11,9 +11,6 @@
 #include <QString>
 #endif
 
-
-class QJsonObject;
-
 struct Score {
     double score;
     double gpa;
@@ -86,16 +83,7 @@ inline auto stu_with_score_to_qjson(const Stu_withScore& stu) -> QJsonObject {
 inline auto stu_with_score_from_qjson(const QJsonObject& obj) -> Stu_withScore {
     Student baseStudent = student_from_qjson(obj);
     Stu_withScore stu;
-    stu.set_id(baseStudent.get_id());
-    stu.set_name(baseStudent.get_name());
-    stu.set_sex(baseStudent.get_sex());
-    stu.set_birthdate(baseStudent.get_birthdate());
-    stu.set_admission_year(baseStudent.get_admission_year());
-    stu.set_major(baseStudent.get_major());
-    stu.set_contact(baseStudent.get_contact());
-    stu.set_address(baseStudent.get_address());
-    stu.set_status(baseStudent.get_status());
-    stu.set_family_members(baseStudent.get_family_members());
+    static_cast<Student&>(stu) = baseStudent;
     for (const auto& course : baseStudent.get_courses())
         stu.add_course(course);
     if (obj.contains("scores")) {
