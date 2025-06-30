@@ -240,25 +240,24 @@ namespace nlohmann {
     }
 
     inline void to_json(json& j, const Sex& s) {
-        static const char* names[] = {"Male", "Female", "Other"};
+        static const char* names[] = {"Male", "Female"};
         j = names[static_cast<int>(s)];
     }
     inline void from_json(const json& j, Sex& s) {
         std::string v = j.get<std::string>();
         if (v == "Female") s = Sex::Female;
-        else if (v == "Other") s = Sex::Other;
         else s = Sex::Male;
     }
 
     inline void to_json(json& j, const Status& st) {
         static const char* names[] = {"Active", "Leave", "Graduated"};
-        j                          = names[static_cast<int>(s)];
+        j                          = names[static_cast<int>(st)];
     }
     inline void from_json(const json& j, Status& st) {
         std::string v = j.get<std::string>();
-        if (v == "Leave") s = Status::Leave;
-        else if (v == "Graduated") s = Status::Graduated;
-        else s                       = Status::Active;
+        if (v == "Leave") st = Status::Leave;
+        else if (v == "Graduated") st = Status::Graduated;
+        else st                       = Status::Active;
     }
 
     inline void to_json(json& j, const Student& stu) {
