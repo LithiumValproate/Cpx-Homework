@@ -1,4 +1,5 @@
 #define USE_QTJSON
+
 #include "webbridge.h"
 #include "stu_with_score.h"
 
@@ -10,15 +11,17 @@
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QMessageBox>
 #include <QStandardPaths>
 #include <QSystemTrayIcon>
 #include <QWidget>
 
+// 构造函数
 WebBridge::WebBridge(QObject *parent)
     : QObject(parent)
 {
     m_parentWidget = qobject_cast<QWidget*>(parent);
-    load_students();
+    load_students(); // 应用启动时加载学生数据
 }
 
 void WebBridge::open_file_dialog(const QString &title, const QString &filter)
@@ -46,7 +49,7 @@ void WebBridge::log_message(const QString &message)
 
 void WebBridge::show_notification(const QString &title, const QString &message)
 {
-    auto trayIcon = new QSystemTrayIcon(this);
+    QSystemTrayIcon *trayIcon = new QSystemTrayIcon(this);
     trayIcon->setIcon(QIcon(":/icons/app_icon.png"));
     trayIcon->show();
     trayIcon->showMessage(title, message, QSystemTrayIcon::Information, 3000);
@@ -68,28 +71,30 @@ QJsonObject WebBridge::get_app_info()
     return info;
 }
 
-QJsonArray WebBridge::get_students()
-{
-    QJsonArray studentsArray;
-    for (const auto &student : m_students) {
-        studentsArray.append(stu_with_score_to_qjson(student));
-    }
-    return studentsArray;
-}
-
 void WebBridge::add_student(const QJsonObject &studentData)
 {
     try {
+        // 直接使用Qt JSON转换函数
         Stu_withScore student = stu_with_score_from_qjson(studentData);
         m_students.push_back(student);
         log_message("Student " + QString::fromStdString(student.get_name()) + " added.");
         show_notification("成功", "学生 " + QString::fromStdString(student.get_name()) + " 已添加。");
-        save_students();
+        save_students(); // 自动保存
     } catch (const std::exception& e) {
         log_message(QString("添加学生失败: %1").arg(e.what()));
     } catch (...) {
         log_message("添加学生失败 (未知错误)。");
     }
+}
+
+QJsonArray WebBridge::get_students()
+{
+    QJsonArray studentsArray;
+    for (const auto &student : m_students) {
+        // 直接使用Qt JSON转换函数
+        studentsArray.append(stu_with_score_to_qjson(student));
+    }
+    return studentsArray;
 }
 
 void WebBridge::update_student(const QJsonObject &studentData)
@@ -101,47 +106,102 @@ void WebBridge::update_student(const QJsonObject &studentData)
     long id = studentData["id"].toVariant().toLongLong();
 
     auto it = std::find_if(m_students.begin(), m_students.end(),
-                           [id](const Stu_withScore &s) { return s.get_id() == id; });
+                           [id](const Stu_withScore& s) {
+                               return s.get_id() == id;
+                           });
 
     if (it != m_students.end()) {
         try {
             *it = stu_with_score_from_qjson(studentData);
-            log_message("学生 " + QString::number(id) + " 的信息已更新。");
-            show_notification("成功", "学生信息已更新。");
-            save_students();
+            log_message("Student " + QString::fromStdString(it->get_name()) + " updated.");
+            show_notification("成功", "学生 " + QString::fromStdString(it->get_name()) + " 已更新。");
+            save_students(); // 自动保存
         } catch (const std::exception& e) {
             log_message(QString("更新学生失败: %1").arg(e.what()));
+        } catch (...) {
+            log_message("更新学生失败 (未知错误)。");
         }
     } else {
-        log_message("更新失败: 未找到 ID 为 " + QString::number(id) + " 的学生。");
+        log_message(QString("更新失败: 未找到ID为 %1 的学生。").arg(id));
     }
 }
 
 void WebBridge::delete_student(long studentId)
 {
     auto it = std::remove_if(m_students.begin(), m_students.end(),
-                             [studentId](const Stu_withScore &s) { return s.get_id() == studentId; });
+                             [studentId](const Stu_withScore& s) {
+                                 return s.get_id() == studentId;
+                             });
 
     if (it != m_students.end()) {
         m_students.erase(it, m_students.end());
-        log_message("学生 " + QString::number(studentId) + " 已被删除。");
-        show_notification("成功", "学生已删除。");
-        save_students();
+        log_message(QString("Student with ID %1 deleted.").arg(studentId));
+        show_notification("成功", QString("ID为 %1 的学生已删除。").arg(studentId));
+        save_students(); // 自动保存
+    } else {
+        log_message(QString("删除失败: 未找到ID为 %1 的学生。").arg(studentId));
     }
-}
-
-QString WebBridge::get_backup_path() const
-{
-    QString path = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
-    QDir dir(path);
-    if (!dir.exists()) {
-        dir.mkpath(".");
-    }
-    return path + "/student_data_backup.json";
 }
 
 void WebBridge::save_students()
 {
     save_students_to_file(get_backup_path());
-    log_message("数据已自动备份。");
+}
+
+void WebBridge::load_students()
+{
+    load_students_from_file(get_backup_path());
+}
+
+void WebBridge::save_students_to_file(const QString &filePath)
+{
+    QFile file(filePath);
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        log_message("无法打开文件进行写入: " + file.errorString());
+        return;
+    }
+
+    QJsonArray studentsArray = get_students();
+    QJsonDocument doc(studentsArray);
+    file.write(doc.toJson());
+    file.close();
+    log_message("学生数据已保存到: " + filePath);
+}
+
+void WebBridge::load_students_from_file(const QString &filePath)
+{
+    QFile file(filePath);
+    if (!file.exists()) {
+        log_message("学生数据文件不存在: " + filePath);
+        return;
+    }
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        log_message("无法打开文件进行读取: " + file.errorString());
+        return;
+    }
+
+    QByteArray data = file.readAll();
+    QJsonDocument doc = QJsonDocument::fromJson(data);
+
+    if (doc.isArray()) {
+        m_students.clear();
+        QJsonArray studentsArray = doc.array();
+        for (const auto& item : studentsArray) {
+            if (item.isObject()) {
+                add_student(item.toObject());
+            }
+        }
+        log_message("学生数据已从 " + filePath + " 加载。");
+    }
+    file.close();
+}
+
+
+QString WebBridge::get_backup_path() const
+{
+    QString backupDir = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+    if (!QDir(backupDir).exists()) {
+        QDir().mkpath(backupDir);
+    }
+    return backupDir + "/student_data.json";
 }
