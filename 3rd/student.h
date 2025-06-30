@@ -58,7 +58,7 @@ class Student {
 private:
     long id{};
     std::string name;
-    Sex sex; // 修改为枚举类型
+    Sex sex;
     Date birthdate;
     int admissionYear{};
     std::string major;
@@ -284,7 +284,7 @@ namespace nlohmann {
         int ay;                         j.at("admissionYear").get_to(ay);       stu.set_admissionYear(ay);
         std::string maj;                j.at("major").get_to(maj);              stu.set_major(maj);
         std::vector<std::string> crs;   j.at("courses").get_to(crs);            stu.clear_courses();
-        for (auto& c : crs)      stu.add_course(c);
+                                        for (auto& c : crs)                 stu.add_course(c);
         Contact ct;                     j.at("contact").get_to(ct);             stu.set_contact(ct);
         Address ad;                     j.at("address").get_to(ad);             stu.set_address(ad);
         Status st;                      j.at("status").get_to(st);              stu.set_status(st);
