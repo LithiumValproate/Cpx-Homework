@@ -1,11 +1,12 @@
 #pragma once
 
+#include "stu_with_score.h"
+
+
 #include <QJsonArray>
 #include <QJsonObject>
 #include <QObject>
 #include <vector>
-#include "stu_with_score.h"
-
 
 class WebBridge : public QObject {
     Q_OBJECT
@@ -13,17 +14,13 @@ class WebBridge : public QObject {
 public:
     explicit WebBridge(QObject* parent = nullptr);
 
-    signals :
-
-
+signals :
     void fileSelected(const QString& filePath);
 
     void fileSaveRequested(const QString& filePath);
 
 public
-    slots :
-
-
+slots :
     void open_file_dialog(const QString& title, const QString& filter);
 
     void save_file_dialog(const QString& title, const QString& filter);
@@ -36,9 +33,9 @@ public
 
     QJsonObject get_app_info();
 
-    void add_student(const QJsonObject& studentData);
-
     QJsonArray get_students();
+
+    void add_student(const QJsonObject& studentData);
 
     void update_student(const QJsonObject& studentData);
 
@@ -55,6 +52,6 @@ private:
 
     QString get_backup_path() const;
 
-    QWidget* m_parentWidget; // 用于弹窗的父窗口指针
+    QWidget* m_parentWidget;
     std::vector<Stu_withScore> m_students;
 };
