@@ -211,16 +211,16 @@ public:
 #ifdef USE_QTJSON
 
 // Sex Qt JSON conversions
-inline QString sex_to_qjson_string(Sex s) {
+inline auto sex_to_qjson_string(Sex s) -> QString {
     return s == Sex::Male ? "Male" : "Female";
 }
 
-inline Sex sex_from_qjson_string(const QString& str) {
+inline auto sex_from_qjson_string(const QString& str) -> Sex {
     return str == "Female" ? Sex::Female : Sex::Male;
 }
 
 // Date Qt JSON conversions
-inline QJsonObject date_to_qjson(const Date& d) {
+inline auto date_to_qjson(const Date& d) -> QJsonObject {
     QJsonObject obj;
     obj["year"]  = d.year;
     obj["month"] = d.month;
@@ -228,7 +228,7 @@ inline QJsonObject date_to_qjson(const Date& d) {
     return obj;
 }
 
-inline Date date_from_qjson(const QJsonObject& obj) {
+inline auto date_from_qjson(const QJsonObject& obj) -> Date {
     Date d;
     d.year  = obj["year"].toInt();
     d.month = obj["month"].toInt();
@@ -237,14 +237,14 @@ inline Date date_from_qjson(const QJsonObject& obj) {
 }
 
 // Address Qt JSON conversions
-inline QJsonObject address_to_qjson(const Address& a) {
+inline auto address_to_qjson(const Address& a) -> QJsonObject {
     QJsonObject obj;
     obj["province"] = QString::fromStdString(a.province);
     obj["city"]     = QString::fromStdString(a.city);
     return obj;
 }
 
-inline Address address_from_qjson(const QJsonObject& obj) {
+inline auto address_from_qjson(const QJsonObject& obj) -> Address {
     Address a;
     a.province = obj["province"].toString().toStdString();
     a.city     = obj["city"].toString().toStdString();
@@ -252,14 +252,14 @@ inline Address address_from_qjson(const QJsonObject& obj) {
 }
 
 // Contact Qt JSON conversions
-inline QJsonObject contact_to_qjson(const Contact& c) {
+inline auto contact_to_qjson(const Contact& c) -> QJsonObject {
     QJsonObject obj;
     obj["phone"] = QString::fromStdString(c.phone);
     obj["email"] = QString::fromStdString(c.email);
     return obj;
 }
 
-inline Contact contact_from_qjson(const QJsonObject& obj) {
+inline auto contact_from_qjson(const QJsonObject& obj) -> Contact {
     Contact c;
     c.phone = obj["phone"].toString().toStdString();
     c.email = obj["email"].toString().toStdString();
@@ -267,7 +267,7 @@ inline Contact contact_from_qjson(const QJsonObject& obj) {
 }
 
 // FamilyMember Qt JSON conversions
-inline QJsonObject family_member_to_qjson(const FamilyMember& fm) {
+inline auto family_member_to_qjson(const FamilyMember& fm) -> QJsonObject {
     QJsonObject obj;
     obj["name"]         = QString::fromStdString(fm.name);
     obj["relationship"] = QString::fromStdString(fm.relationship);
@@ -275,7 +275,7 @@ inline QJsonObject family_member_to_qjson(const FamilyMember& fm) {
     return obj;
 }
 
-inline FamilyMember family_member_from_qjson(const QJsonObject& obj) {
+inline auto family_member_from_qjson(const QJsonObject& obj) -> FamilyMember {
     FamilyMember fm;
     fm.name         = obj["name"].toString().toStdString();
     fm.relationship = obj["relationship"].toString().toStdString();
@@ -284,7 +284,7 @@ inline FamilyMember family_member_from_qjson(const QJsonObject& obj) {
 }
 
 // Status Qt JSON conversions
-inline QString status_to_qjson_string(Status st) {
+inline auto status_to_qjson_string(Status st) -> QString {
     switch (st) {
         case Status::Active: return "Active";
         case Status::Leave: return "Leave";
@@ -293,14 +293,14 @@ inline QString status_to_qjson_string(Status st) {
     }
 }
 
-inline Status status_from_qjson_string(const QString& str) {
+inline auto status_from_qjson_string(const QString& str) -> Status {
     if (str == "Leave") return Status::Leave;
     else if (str == "Graduated") return Status::Graduated;
     return Status::Active;
 }
 
 // Student Qt JSON conversions
-inline QJsonObject student_to_qjson(const Student& stu) {
+inline auto student_to_qjson(const Student& stu) -> QJsonObject {
     QJsonObject obj;
     obj["id"]            = static_cast<qint64>(stu.get_id());
     obj["name"]          = QString::fromStdString(stu.get_name());
@@ -324,7 +324,7 @@ inline QJsonObject student_to_qjson(const Student& stu) {
     return obj;
 }
 
-inline Student student_from_qjson(const QJsonObject& obj) {
+inline auto student_from_qjson(const QJsonObject& obj) -> Student {
     Student stu;
     stu.set_id(obj["id"].toVariant().toLong());
     stu.set_name(obj["name"].toString().toStdString());

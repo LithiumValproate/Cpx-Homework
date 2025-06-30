@@ -1,67 +1,112 @@
 #pragma once
-#include <algorithm>
-#include <numeric>
-#include <ostream>
-#include <string>
-#include <vector>
+
 #include "student.h"
 
+#include <map>
+
+#ifdef USE_QTJSON
+#include <QJsonArray>
+#include <QJsonObject>
+#include <QJsonValue>
+#include <QString>
+#endif
+
+
+class QJsonObject;
+
 struct Score {
-    std::string courseName;
     double score;
     double gpa;
-
-    Score() : courseName(""), score(0), gpa(0) {}
-
-    Score(const std::string& cn, double s, double g)
-        : courseName(cn), score(s), gpa(g) {}
+    Score() : score(0), gpa(0) {}
+    Score(double s, double g) : score(s), gpa(g) {}
 };
 
 class Stu_withScore : public Student {
 private:
-    std::vector<Score> scores;
+    std::map<std::string, Score> courseScore;
 
 public:
-    using Student::Student;
+    Stu_withScore() = default;
 
     ~Stu_withScore() = default;
 
-    // scores management
-    auto get_scores() const -> const std::vector<Score>& { return scores; }
-
-    void clear_scores() { scores.clear(); }
-
-    void add_score(const Score& sc) { scores.push_back(sc); }
-
-    bool remove_score(const std::string& courseName) {
-        auto it = std::remove_if(scores.begin(), scores.end(),
-                                 [&] (const Score& s) { return s.courseName == courseName; });
-        if (it == scores.end()) return false;
-        scores.erase(it, scores.end());
-        return true;
+    double get_score(const std::string& course) const {
+        auto it = courseScore.find(course);
+        return it != courseScore.end() ? it->second.score : 0.0;
     }
 
-    Score* find_score(const std::string& courseName) {
-        auto it = std::find_if(scores.begin(), scores.end(),
-                               [&] (const Score& s) { return s.courseName == courseName; });
-        return it != scores.end() ? &*it : nullptr;
+    auto get_all_scores() const -> const std::map<std::string, Score>& {
+        return courseScore;
     }
 
-    double calculate_gpa() const {
-        if (scores.empty()) return 0.0;
-        double sum = std::accumulate(scores.begin(), scores.end(), 0.0,
-                                     [] (double acc, const Score& s) { return acc + s.gpa; });
-        return sum / scores.size();
+    void set_scores(const std::map<std::string, Score>& new_scores) {
+        courseScore = new_scores;
     }
 
-    friend std::ostream& operator<<(std::ostream& os, const Stu_withScore& s) {
-        os << static_cast<const Student&>(s) << "\n分数:\n";
-        for (auto& sc : s.scores) {
-            os << "  - " << sc.courseName
-                    << ": 原始分: " << sc.score
-                    << ", 绩点: " << sc.gpa << "\n";
+    void add_score(const std::string& course, Score score) {
+        courseScore[course] = score;
+    }
+
+    double calculate_average() const {
+        if (courseScore.empty()) return 0.0;
+        double sum = 0.0;
+        for (const auto& pair : courseScore) {
+            sum += pair.second.score;
         }
-        os << ", 总绩点: " << s.calculate_gpa();
-        return os;
+        return sum / static_cast<double>(courseScore.size());
     }
 };
+
+// -- JSON conversions for Stu_withScore --
+#ifdef USE_QTJSON
+
+inline auto score_to_qjson(const Score& s) -> QJsonObject {
+    QJsonObject obj;
+    obj["score"] = s.score;
+    obj["gpa"] = s.gpa;
+    return obj;
+}
+
+inline auto score_from_qjson(const QJsonObject& obj) -> Score {
+    Score s;
+    s.score = obj["score"].toDouble();
+    s.gpa = obj["gpa"].toDouble();
+    return s;
+}
+
+inline auto stu_with_score_to_qjson(const Stu_withScore& stu) -> QJsonObject {
+    QJsonObject obj = student_to_qjson(stu);
+    QJsonObject scoresObj;
+    for (const auto& pair : stu.get_all_scores())
+        scoresObj[QString::fromStdString(pair.first)] = score_to_qjson(pair.second);
+    obj["scores"] = scoresObj;
+    return obj;
+}
+
+inline auto stu_with_score_from_qjson(const QJsonObject& obj) -> Stu_withScore {
+    Student baseStudent = student_from_qjson(obj);
+    Stu_withScore stu;
+    stu.set_id(baseStudent.get_id());
+    stu.set_name(baseStudent.get_name());
+    stu.set_sex(baseStudent.get_sex());
+    stu.set_birthdate(baseStudent.get_birthdate());
+    stu.set_admission_year(baseStudent.get_admission_year());
+    stu.set_major(baseStudent.get_major());
+    stu.set_contact(baseStudent.get_contact());
+    stu.set_address(baseStudent.get_address());
+    stu.set_status(baseStudent.get_status());
+    stu.set_family_members(baseStudent.get_family_members());
+    for (const auto& course : baseStudent.get_courses())
+        stu.add_course(course);
+    if (obj.contains("scores")) {
+        QJsonObject scoresObj = obj["scores"].toObject();
+        std::map<std::string, Score> scores;
+        for (auto it = scoresObj.begin(); it != scoresObj.end(); ++it) {
+            scores[it.key().toStdString()] = score_from_qjson(it.value().toObject());
+        }
+        stu.set_scores(scores);
+    }
+    return stu;
+}
+
+#endif

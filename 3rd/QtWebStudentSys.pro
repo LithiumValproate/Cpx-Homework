@@ -16,7 +16,9 @@ SOURCES += \
 
 HEADERS += \
     mainwindow.h \
-    webbridge.h
+    webbridge.h \
+    student.h \
+    stu_with_score.h
 
 RESOURCES += \
     resources.qrc
