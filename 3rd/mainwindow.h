@@ -1,41 +1,46 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#pragma once
+
+#include "webbridge.h"
 
 #include <QMainWindow>
 #include <QWebEngineView>
 #include <QWebChannel>
-#include "webbridge.h"
 
 class QLabel;
 class QProgressBar;
 
-class MainWindow : public QMainWindow
-{
+class MainWindow : public QMainWindow {
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
+    explicit MainWindow(QWidget* parent = nullptr);
+
+    ~MainWindow() override;
 
 private slots:
-    void onLoadStarted();
-    void onLoadProgress(int progress);
-    void onLoadFinished(bool success);
-    void refreshPage();
-    void showAbout();
+    void on_load_started();
+
+    void on_load_progress(int progress);
+
+    void on_load_finished(bool success);
+
+    void refresh_page();
+
+    void show_about();
 
 private:
-    void setupUI();
-    void setupMenuBar();
-    void setupStatusBar();
-    void setupWebView();
+    void setup_ui();
 
-    QWebEngineView *m_webView;
-    QWebChannel *m_webChannel;
-    WebBridge *m_webBridge;
-    
-    QLabel *m_statusLabel;
-    QProgressBar *m_progressBar;
+    void setup_menu_bar();
+
+    void setup_status_bar();
+
+    void setup_web_view();
+
+    QWebEngineView* m_webView;
+    QWebChannel* m_webChannel;
+    WebBridge* m_webBridge;
+
+    QLabel* m_statusLabel;
+    QProgressBar* m_progressBar;
 };
-
-#endif // MAINWINDOW_H
