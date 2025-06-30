@@ -5,9 +5,14 @@
 #include <ostream>
 #include <string>
 #include <vector>
-#include "json.hpp"
 
-using nlohmann::json;
+#ifdef USE_QTJSON
+#include <QJsonArray>
+#include <QJsonObject>
+#include <QJsonValue>
+#include <QString>
+#endif
+
 
 // -- data types --
 
@@ -17,6 +22,7 @@ struct Date {
     int day{};
 
     Date() = default;
+
     Date(int y, int m, int d) : year(y), month(m), day(d) {}
 };
 
@@ -25,6 +31,7 @@ struct Address {
     std::string city;
 
     Address() = default;
+
     Address(const std::string& p, const std::string& c)
         : province(p), city(c) {}
 };
@@ -34,6 +41,7 @@ struct Contact {
     std::string email;
 
     Contact() = default;
+
     Contact(const std::string& p, const std::string& e)
         : phone(p), email(e) {}
 };
@@ -44,13 +52,14 @@ struct FamilyMember {
     Contact contactInfo;
 
     FamilyMember() = default;
+
     FamilyMember(const std::string& n,
                  const std::string& r,
                  const Contact& c)
         : name(n), relationship(r), contactInfo(c) {}
 };
 
-enum class Sex { Male = 0, Female = 1};
+enum class Sex { Male = 0, Female = 1 };
 
 enum class Status { Active = 0, Leave = 1, Graduated = 2 };
 
@@ -70,6 +79,7 @@ private:
 
 public:
     Student() = default;
+
     Student(long id,
             const std::string& n,
             Sex s,
@@ -85,8 +95,11 @@ public:
 
     // copy/move
     Student(const Student&) = default;
+
     Student(Student&&) noexcept = default;
+
     Student& operator=(const Student&) = default;
+
     Student& operator=(Student&&) noexcept = default;
 
     // getters/setters
@@ -102,19 +115,21 @@ public:
     auto get_birthdate() const -> const Date& { return birthdate; }
     void set_birthdate(const Date& v) { birthdate = v; }
 
-    auto get_admissionYear() const -> int { return admissionYear; }
-    void set_admissionYear(int v) { admissionYear = v; }
+    auto get_admission_year() const -> int { return admissionYear; }
+    void set_admission_year(int v) { admissionYear = v; }
 
     auto get_major() const -> const std::string& { return major; }
     void set_major(const std::string& v) { major = v; }
 
     auto get_courses() const -> const std::vector<std::string>& { return courses; }
     void add_course(const std::string& c) { courses.push_back(c); }
+
     void del_course(const std::string& c) {
         courses.erase(
                       std::remove(courses.begin(), courses.end(), c),
                       courses.end());
     }
+
     void clear_courses() { courses.clear(); }
 
     auto get_contact() const & -> const Contact& { return contactInfo; }
@@ -123,16 +138,19 @@ public:
     auto get_address() const & -> const Address& { return address; }
     void set_address(const Address& v) { address = v; }
 
-    auto get_familyMembers() const -> const std::vector<FamilyMember>& {
+    auto get_family_members() const -> const std::vector<FamilyMember>& {
         return familyMembers;
     }
-    void set_familyMembers(const std::vector<FamilyMember>& v) {
+
+    void set_family_members(const std::vector<FamilyMember>& v) {
         familyMembers = v;
     }
-    void add_familyMember(const FamilyMember& fm) {
+
+    void add_family_member(const FamilyMember& fm) {
         familyMembers.push_back(fm);
     }
-    void del_familyMember(const FamilyMember& fm) {
+
+    void del_family_member(const FamilyMember& fm) {
         familyMembers.erase(
                             std::remove_if(
                                            familyMembers.begin(),
@@ -159,6 +177,7 @@ public:
         }
         return age;
     }
+
     int get_age() const { return calculate_age(); }
 
     // streaming
@@ -189,104 +208,145 @@ public:
 };
 
 // -- JSON conversions --
+#ifdef USE_QTJSON
 
-namespace nlohmann {
-    inline void to_json(json& j, const Date& d) {
-        j = json{
-                {"year", d.year},
-                {"month", d.month},
-                {"day", d.day}
-                };
-    }
-    inline void from_json(const json& j, Date& d) {
-        j.at("year").get_to(d.year);
-        j.at("month").get_to(d.month);
-        j.at("day").get_to(d.day);
-    }
+// Sex Qt JSON conversions
+inline QString sex_to_qjson_string(Sex s) {
+    return s == Sex::Male ? "Male" : "Female";
+}
 
-    inline void to_json(json& j, const Address& a) {
-        j = json{
-                {"city", a.city},
-                {"province", a.province}
-                };
-    }
-    inline void from_json(const json& j, Address& a) {
-        j.at("city").get_to(a.city);
-        j.at("province").get_to(a.province);
-    }
+inline Sex sex_from_qjson_string(const QString& str) {
+    return str == "Female" ? Sex::Female : Sex::Male;
+}
 
-    inline void to_json(json& j, const Contact& c) {
-        j = json{
-                {"phone", c.phone},
-                {"email", c.email}
-                };
-    }
-    inline void from_json(const json& j, Contact& c) {
-        j.at("phone").get_to(c.phone);
-        j.at("email").get_to(c.email);
-    }
+// Date Qt JSON conversions
+inline QJsonObject date_to_qjson(const Date& d) {
+    QJsonObject obj;
+    obj["year"]  = d.year;
+    obj["month"] = d.month;
+    obj["day"]   = d.day;
+    return obj;
+}
 
-    inline void to_json(json& j, const FamilyMember& fm) {
-        j = json{
-                {"name", fm.name},
-                {"relationship", fm.relationship},
-                {"contactInfo", fm.contactInfo}
-                };
-    }
-    inline void from_json(const json& j, FamilyMember& fm) {
-        j.at("name").get_to(fm.name);
-        j.at("relationship").get_to(fm.relationship);
-        j.at("contactInfo").get_to(fm.contactInfo);
-    }
+inline Date date_from_qjson(const QJsonObject& obj) {
+    Date d;
+    d.year  = obj["year"].toInt();
+    d.month = obj["month"].toInt();
+    d.day   = obj["day"].toInt();
+    return d;
+}
 
-    inline void to_json(json& j, const Sex& s) {
-        static const char* names[] = {"Male", "Female"};
-        j = names[static_cast<int>(s)];
-    }
-    inline void from_json(const json& j, Sex& s) {
-        std::string v = j.get<std::string>();
-        if (v == "Female") s = Sex::Female;
-        else s = Sex::Male;
-    }
+// Address Qt JSON conversions
+inline QJsonObject address_to_qjson(const Address& a) {
+    QJsonObject obj;
+    obj["province"] = QString::fromStdString(a.province);
+    obj["city"]     = QString::fromStdString(a.city);
+    return obj;
+}
 
-    inline void to_json(json& j, const Status& st) {
-        static const char* names[] = {"Active", "Leave", "Graduated"};
-        j                          = names[static_cast<int>(st)];
-    }
-    inline void from_json(const json& j, Status& st) {
-        std::string v = j.get<std::string>();
-        if (v == "Leave") st = Status::Leave;
-        else if (v == "Graduated") st = Status::Graduated;
-        else st                       = Status::Active;
-    }
+inline Address address_from_qjson(const QJsonObject& obj) {
+    Address a;
+    a.province = obj["province"].toString().toStdString();
+    a.city     = obj["city"].toString().toStdString();
+    return a;
+}
 
-    inline void to_json(json& j, const Student& stu) {
-        j = json{
-                {"id", stu.get_id()},
-                {"name", stu.get_name()},
-                {"sex", stu.get_sex()},
-                {"birthdate", stu.get_birthdate()},
-                {"admissionYear", stu.get_admissionYear()},
-                {"major", stu.get_major()},
-                {"courses", stu.get_courses()},
-                {"contact", stu.get_contact()},
-                {"address", stu.get_address()},
-                {"status", stu.get_status()},
-                {"familyMembers", stu.get_familyMembers()}
-                };
-    }
-    inline void from_json(const json& j, Student& stu) {
-        long id;                        j.at("id").get_to(id);                  stu.set_id(id);
-        std::string name;               j.at("name").get_to(name);              stu.set_name(name);
-        Sex sex;                        j.at("sex").get_to(sex);                stu.set_sex(sex);
-        Date d;                         j.at("birthdate").get_to(d);            stu.set_birthdate(d);
-        int ay;                         j.at("admissionYear").get_to(ay);       stu.set_admissionYear(ay);
-        std::string maj;                j.at("major").get_to(maj);              stu.set_major(maj);
-        std::vector<std::string> crs;   j.at("courses").get_to(crs);            stu.clear_courses();
-                                        for (auto& c : crs)                 stu.add_course(c);
-        Contact ct;                     j.at("contact").get_to(ct);             stu.set_contact(ct);
-        Address ad;                     j.at("address").get_to(ad);             stu.set_address(ad);
-        Status st;                      j.at("status").get_to(st);              stu.set_status(st);
-        std::vector<FamilyMember> fms;  j.at("familyMembers").get_to(fms);      stu.set_familyMembers(fms);
+// Contact Qt JSON conversions
+inline QJsonObject contact_to_qjson(const Contact& c) {
+    QJsonObject obj;
+    obj["phone"] = QString::fromStdString(c.phone);
+    obj["email"] = QString::fromStdString(c.email);
+    return obj;
+}
+
+inline Contact contact_from_qjson(const QJsonObject& obj) {
+    Contact c;
+    c.phone = obj["phone"].toString().toStdString();
+    c.email = obj["email"].toString().toStdString();
+    return c;
+}
+
+// FamilyMember Qt JSON conversions
+inline QJsonObject family_member_to_qjson(const FamilyMember& fm) {
+    QJsonObject obj;
+    obj["name"]         = QString::fromStdString(fm.name);
+    obj["relationship"] = QString::fromStdString(fm.relationship);
+    obj["contactInfo"]  = contact_to_qjson(fm.contactInfo);
+    return obj;
+}
+
+inline FamilyMember family_member_from_qjson(const QJsonObject& obj) {
+    FamilyMember fm;
+    fm.name         = obj["name"].toString().toStdString();
+    fm.relationship = obj["relationship"].toString().toStdString();
+    fm.contactInfo  = contact_from_qjson(obj["contactInfo"].toObject());
+    return fm;
+}
+
+// Status Qt JSON conversions
+inline QString status_to_qjson_string(Status st) {
+    switch (st) {
+        case Status::Active: return "Active";
+        case Status::Leave: return "Leave";
+        case Status::Graduated: return "Graduated";
+        default: return "Active";
     }
 }
+
+inline Status status_from_qjson_string(const QString& str) {
+    if (str == "Leave") return Status::Leave;
+    else if (str == "Graduated") return Status::Graduated;
+    return Status::Active;
+}
+
+// Student Qt JSON conversions
+inline QJsonObject student_to_qjson(const Student& stu) {
+    QJsonObject obj;
+    obj["id"]            = static_cast<qint64>(stu.get_id());
+    obj["name"]          = QString::fromStdString(stu.get_name());
+    obj["sex"]           = sex_to_qjson_string(stu.get_sex());
+    obj["birthdate"]     = date_to_qjson(stu.get_birthdate());
+    obj["admissionYear"] = stu.get_admission_year();
+    obj["major"]         = QString::fromStdString(stu.get_major());
+    QJsonArray coursesArray;
+    for (const auto& course : stu.get_courses()) {
+        coursesArray.append(QString::fromStdString(course));
+    }
+    obj["courses"] = coursesArray;
+    obj["contact"] = contact_to_qjson(stu.get_contact());
+    obj["address"] = address_to_qjson(stu.get_address());
+    obj["status"]  = status_to_qjson_string(stu.get_status());
+    QJsonArray familyArray;
+    for (const auto& fm : stu.get_family_members()) {
+        familyArray.append(family_member_to_qjson(fm));
+    }
+    obj["familyMembers"] = familyArray;
+    return obj;
+}
+
+inline Student student_from_qjson(const QJsonObject& obj) {
+    Student stu;
+    stu.set_id(obj["id"].toVariant().toLong());
+    stu.set_name(obj["name"].toString().toStdString());
+    stu.set_sex(sex_from_qjson_string(obj["sex"].toString()));
+    stu.set_birthdate(date_from_qjson(obj["birthdate"].toObject()));
+    stu.set_admission_year(obj["admissionYear"].toInt());
+    stu.set_major(obj["major"].toString().toStdString());
+    stu.clear_courses();
+    QJsonArray coursesArray = obj["courses"].toArray();
+    for (const auto& courseValue : coursesArray) {
+        stu.add_course(courseValue.toString().toStdString());
+    }
+    stu.set_contact(contact_from_qjson(obj["contact"].toObject()));
+    stu.set_address(address_from_qjson(obj["address"].toObject()));
+    stu.set_status(status_from_qjson_string(obj["status"].toString()));
+    QJsonArray familyArray = obj["familyMembers"].toArray();
+    std::vector<FamilyMember> familyMembers;
+    for (const auto& familyValue : familyArray) {
+        familyMembers.push_back(family_member_from_qjson(familyValue.toObject()));
+    }
+    stu.set_family_members(familyMembers);
+    return stu;
+}
+
+#endif // USE_QTJSON
