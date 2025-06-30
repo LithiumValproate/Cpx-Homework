@@ -88,3 +88,45 @@ QJsonObject WebBridge::getAppInfo()
     
     return info;
 }
+
+// 从网页接收一个学生JSON对象，并添加到vector中
+void WebBridge::addStudent(const QJsonObject &studentData)
+{
+    // 这里需要你自己实现从 QJsonObject 到 Stu_withScore 的转换
+    // 为了简化，我们只读取几个关键字段作为示例
+    // 你需要根据 student.h 中的 from_json 来完善它
+    try {
+        Stu_withScore student;
+        student.set_id(studentData["id"].toVariant().toLongLong());
+        student.set_name(studentData["name"].toString());
+        student.set_major(studentData["major"].toString());
+
+        // 你可以继续设置其他属性...
+
+        m_students.push_back(student);
+        emit studentDataChanged(); // 通知UI更新
+        showNotification("成功", "学生 " + student.get_name() + " 已添加。");
+
+    } catch (...) {
+        showNotification("错误", "添加学生失败，请检查数据格式。");
+    }
+}
+
+// 将C++ vector中的所有学生数据转换成JSON数组返回给网页
+QJsonArray WebBridge::getStudents()
+{
+    QJsonArray studentsArray;
+    for (const auto& student : m_students) {
+        // 这里需要你自己实现从 Stu_withScore 到 QJsonObject 的转换
+        // 为了简化，我们只转换几个关键字段作为示例
+        // 你需要根据 student.h 中的 to_json 来完善它
+        QJsonObject studentObj;
+        studentObj["id"] = QJsonValue::fromVariant(QVariant::fromValue(student.get_id()));
+        studentObj["name"] = student.get_name();
+        studentObj["major"] = student.get_major();
+        studentObj["age"] = student.get_age();
+
+        studentsArray.append(studentObj);
+    }
+    return studentsArray;
+}

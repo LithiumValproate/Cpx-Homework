@@ -93,9 +93,7 @@ void MainWindow::setupWebView()
     m_webView->page()->setWebChannel(m_webChannel);
     
     // 加载HTML文件
-    QString htmlPath = QApplication::applicationDirPath() + "/../web/student-management.html";
-    QUrl url = QUrl::fromLocalFile(QFileInfo(htmlPath).absoluteFilePath());
-    m_webView->load(url);
+    m_webView->load(QUrl("qrc:/web/web/student-management.html"));
 }
 
 void MainWindow::onLoadStarted()

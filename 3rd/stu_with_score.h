@@ -4,7 +4,7 @@
 #include <ostream>
 #include <string>
 #include <vector>
-#include "Student.h"
+#include "student.h"
 
 struct Score {
     std::string courseName;

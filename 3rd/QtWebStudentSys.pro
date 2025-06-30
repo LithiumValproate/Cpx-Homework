@@ -2,7 +2,7 @@ QT += core widgets webenginewidgets webchannel
 
 CONFIG += c++17
 
-TARGET = QtWebStudentSystem
+TARGET = WebStudentSys
 TEMPLATE = app
 
 VERSION = 1.0.0
