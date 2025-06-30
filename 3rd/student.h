@@ -326,7 +326,7 @@ inline auto student_to_qjson(const Student& stu) -> QJsonObject {
 
 inline auto student_from_qjson(const QJsonObject& obj) -> Student {
     Student stu;
-    stu.set_id(obj["id"].toVariant().toLong());
+    stu.set_id(obj["id"].toVariant().toLongLong());
     stu.set_name(obj["name"].toString().toStdString());
     stu.set_sex(sex_from_qjson_string(obj["sex"].toString()));
     stu.set_birthdate(date_from_qjson(obj["birthdate"].toObject()));
